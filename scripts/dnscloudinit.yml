@@ -1,0 +1,19 @@
+password: test
+chpasswd: { expire: False }
+
+runcmd:
+  - [ systemctl, disable, --now, systemd-resolved.service ]
+  - [ rm, /etc/resolv.conf ]
+  - [ sh, -c, 'echo "nameserver 8.8.8.8" > /etc/resolv.conf' ]
+  - [ apt-get, update ]
+  - [ apt-get, upgrade ]
+  - [ apt-get, install,-y, dnsmasq ]
+  - [ apt-get, install,-y, python ]
+
+write_files:
+-   encoding: b64
+    content: ZXhjZXB0LWludGVyZmFjZT1sbwo=
+    owner: root:root
+    path: /etc/dnsmasq.d/custom.conf
+    permissions: '0644'
+
