@@ -78,7 +78,7 @@ resource "openstack_compute_instance_v2" "dns" {
   user_data = data.template_cloudinit_config.cloudinit.rendered
 
   metadata = {
-    groups = "internetdns"
+    groups = "internet, dns"
   }
 
 #  security_groups = ["inetdns-sg"]
