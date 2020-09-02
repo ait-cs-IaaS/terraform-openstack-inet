@@ -1,37 +1,35 @@
 variable "cidr" {
-        type = string
+	type = string
 	description = "Subnet-ID"
 	default = "240.168.200.0/24"
-#	default = "192.168.200.0/24"
 }
 
-variable "dnsip" {
-        type = string
+variable "dns_ip" {
+	type = string
 	description = "Subnet-ID"
 	default = "240.168.200.3"
-#	default = "192.168.200.3"
 }
 
-variable "dns" {
+variable "external_dns" {
         type = list(string)
         description = "DNS server"
         default = [ "8.8.8.8" ]
 }
 
-variable "dnsimage_id" {
+variable "dns_image" {
 	type = string
 	description = "image to boot the dns-server from"
 }
 
-variable "dnsflavor" {
+variable "dns_flavor" {
 	type = string
 	description = "instance flavor for the dns-server"
-        default = "m1.tiny"
+	default = "m1.tiny"
 }
 
-variable "dnssshkey" {
+variable "dns_sshkey" {
 	type = string
-        description = "ssh key of the firewall"
+	description = "ssh key of the firewall"
 	default = "cyberrange-key"
 }
 
