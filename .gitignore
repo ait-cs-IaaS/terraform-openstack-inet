@@ -1,4 +1,5 @@
 # For Terragrunt/Terraform
 .terragrunt-cache/
 .terraform/
+.terraform.lock.hcl
 

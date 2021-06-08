@@ -14,7 +14,11 @@ output "network_name" {
   value = openstack_networking_network_v2.internet.name
 }
 
+output "dns_id" {
+  value = module.dns.server.id
+}
+
 output "dns_ip" {
-  value = openstack_networking_port_v2.inetdns-port.fixed_ip[0].ip_address
+  value = module.dns.server.network[0].fixed_ip_v4
 }
 
