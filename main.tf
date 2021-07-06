@@ -21,7 +21,7 @@ resource "openstack_networking_router_interface_v2" "router_interface_1" {
 }
 
 module "dns" {
-  source             = "git@git-service.ait.ac.at:sct-cyberrange/terraform-modules/openstack-srv_noportsec.git?ref=v1.4.1"
+  source             = "git@github.com:ait-cs-IaaS/terraform-openstack-srv_noportsec.git?ref=v1.4.2"
   hostname           = var.dns_name
   tag                = var.dns_tag
   host_address_index = var.dns_host_address_index
