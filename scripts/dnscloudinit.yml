@@ -51,5 +51,3 @@ runcmd:
   - [userdel, -r, ubuntu]
   - [sleep, 30]
   - [ /root/ifsetup.sh ]
-  - [apt-get, update]
-  - [apt-get, install, -y, python]
