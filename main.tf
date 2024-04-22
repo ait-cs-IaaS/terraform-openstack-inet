@@ -1,37 +1,31 @@
+# search public router by name and receive all the data
 data "openstack_networking_router_v2" "public_router" {
-  name = var.router_name
+  name = var.public_router_name
 }
 
-resource "openstack_networking_network_v2" "internet" {
-  name           = var.internet_name
-  admin_state_up = "true"
+# create the network and subnet for the fake-internet
+module "internet" {
+  source  = "git@github.com:ait-cs-IaaS/terraform-openstack-network.git"
+  name    = "internet"
+  cidr    = var.internet_cidr
+  dns_nameservers = ["8.8.8.8"]
 }
 
-resource "openstack_networking_subnet_v2" "inet-subnet" {
-  name            = "subnet-${var.internet_name}"
-  network_id      = openstack_networking_network_v2.internet.id
-  cidr            = var.cidr
-  dns_nameservers = var.external_dns
-  ip_version      = 4
-}
-
-resource "openstack_networking_router_interface_v2" "router_interface_1" {
+# create an interface between fake-internet and real internet on the public router
+resource "openstack_networking_router_interface_v2" "router_interface" {
   router_id = data.openstack_networking_router_v2.public_router.id
-  subnet_id = openstack_networking_subnet_v2.inet-subnet.id
+  subnet_id = module.internet.subnet_id
 }
 
-module "dns" {
-  source             = "git@github.com:ait-cs-IaaS/terraform-openstack-srv_noportsec.git?ref=v1.5.1"
-  hostname           = var.dns_name
-  tag                = var.dns_tag
-  host_address_index = var.dns_host_address_index
-  image              = var.dns_image
-  flavor             = var.dns_flavor
-  volume_size        = var.dns_volume_size
-  use_volume         = var.dns_use_volume
-  sshkey             = var.sshkey
-  network            = openstack_networking_network_v2.internet.id
-  subnet             = openstack_networking_subnet_v2.inet-subnet.id
-  userdatafile       = var.dns_userdata == null ? "${path.module}/scripts/dnscloudinit.yml" : var.dns_userdata
-  userdata_vars      = var.dns_userdata_vars
+# create a local DNS server on the fake-internet
+module "internet_dns_server" {
+    source = "git@github.com:ait-cs-IaaS/terraform-openstack-srv_noportsec.git"
+    count = var.create_dns ? 1 : 0 # if var.create_dns is true, create one dns server, otherwise don't create it
+    name = "internet_dns"
+    cidr = var.internet_cidr
+    host_index = 5
+    image = var.dns_image
+    flavor = var.dns_flavor
+    network_id = module.internet.network_id
+    subnet_id = module.internet.subnet_id
 }

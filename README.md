@@ -2,7 +2,7 @@
 
 Creates a fake-inet with a fake-inet-dns-server
 
-## Configuration
+## TODO: BOOSTER Configuration
 
 ```
 module "internet" {

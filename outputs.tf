@@ -1,24 +1,4 @@
-output "subnet_id" {
-  value = openstack_networking_subnet_v2.inet-subnet.id
-}
-
-output "subnet_name" {
-  value = openstack_networking_subnet_v2.inet-subnet.name
-}
-
-output "network_id" {
-  value = openstack_networking_network_v2.internet.id
-}
-
-output "network_name" {
-  value = openstack_networking_network_v2.internet.name
-}
-
-output "dns_id" {
-  value = module.dns.server.id
-}
-
-output "dns_ip" {
-  value = module.dns.server.network[0].fixed_ip_v4
-}
-
+# return the network_id, subnet_id, and the cidr of the fake-internet
+output "network_id" { value = module.internet.network_id }
+output "subnet_id" { value = module.internet.subnet_id }
+output "cidr" { value = var.internet_cidr }
