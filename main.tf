@@ -5,9 +5,9 @@ data "openstack_networking_router_v2" "public_router" {
 
 # create the network and subnet for the fake-internet
 module "internet" {
-  source  = "git@github.com:ait-cs-IaaS/terraform-openstack-network.git"
-  name    = "internet"
-  cidr    = var.internet_cidr
+  source          = "git@github.com:ait-cs-IaaS/terraform-openstack-network.git"
+  name            = "internet"
+  cidr            = var.internet_cidr
   dns_nameservers = ["8.8.8.8"]
 }
 
@@ -19,13 +19,14 @@ resource "openstack_networking_router_interface_v2" "router_interface" {
 
 # create a local DNS server on the fake-internet
 module "internet_dns_server" {
-    source = "git@github.com:ait-cs-IaaS/terraform-openstack-srv_noportsec.git"
-    count = var.create_dns ? 1 : 0 # if var.create_dns is true, create one dns server, otherwise don't create it
-    name = "internet_dns"
-    cidr = var.internet_cidr
-    host_index = 5
-    image = var.dns_image
-    flavor = var.dns_flavor
-    network_id = module.internet.network_id
-    subnet_id = module.internet.subnet_id
+  source          = "git@github.com:ait-cs-IaaS/terraform-openstack-srv_noportsec.git"
+  count           = var.create_dns ? 1 : 0 # if var.create_dns is true, create one dns server, otherwise don't create it
+  name            = "internet_dns"
+  metadata_groups = "internet, dns, dnsservers"
+  cidr            = var.internet_cidr
+  host_index      = 5
+  image           = var.dns_image
+  flavor          = var.dns_flavor
+  network_id      = module.internet.network_id
+  subnet_id       = module.internet.subnet_id
 }
